@@ -1,0 +1,26 @@
+<%- include('partials/head') %>
+<div class="welcome">
+  <div class="welcome-bg" style="background-image:url('<%= asset('hero/match-night.jpg') %>')" role="img" aria-label="Football training under floodlights at night"></div>
+  <header class="welcome-head">
+    <%- include('partials/brand') %>
+    <div class="topbar">
+      <%- include('partials/lang') %>
+      <a class="btn btn-ghost btn-sm" href="/login">Log in</a>
+    </div>
+  </header>
+  <main class="welcome-body">
+    <h1 class="hero-title">Your way<br>into every<br><em>match.</em></h1>
+    <p class="hero-lead">Football and concert tickets across Egypt — signed, linked to your ID, and ready offline at the gate.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="/signup">Create account</a>
+      <a class="btn btn-ghost" href="/login">Log in</a>
+    </div>
+  </main>
+  <section class="features" aria-label="Why YallaIn">
+    <div class="feature"><span class="feature-ic"><%- icon('shield') %></span><div><b>Signed tickets</b><small>No fakes, no screenshots</small></div></div>
+    <div class="feature"><span class="feature-ic"><%- icon('queue') %></span><div><b>Fair queue</b><small>One ticket per verified ID</small></div></div>
+    <div class="feature"><span class="feature-ic"><%- icon('wifi') %></span><div><b>Works offline</b><small>Enter even with no signal</small></div></div>
+  </section>
+</div>
+</body>
+</html>

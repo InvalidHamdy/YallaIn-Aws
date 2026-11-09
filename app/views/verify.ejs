@@ -1,0 +1,29 @@
+<%- include('partials/auth-start', { panel: 'floodlight', quote: '“One ticket per verified ID keeps derby tickets with real fans.”' }) %>
+<div class="eyebrow">Step 2 of 6</div>
+<h1 class="title">Enter the <em>code</em></h1>
+<div class="otp-sent">
+  <span>Sent to <span style="font-family:var(--font-mono)"><%= masked %></span></span>
+  <form method="post" action="/verify/change-number"><button class="linklike link-lime" type="submit" style="font-size:13px">Change number</button></form>
+</div>
+
+<% if (demoCode) { %>
+<div class="alert alert-demo" style="margin-bottom:20px"><%- icon('info', 16) %>Demo mode (SNS off): your code is <b><%= demoCode %></b></div>
+<% } %>
+
+<form class="form" method="post" action="/verify" id="otp-form" novalidate>
+  <input type="hidden" name="code" id="code">
+  <fieldset class="otp <%= error ? 'invalid' : '' %>" style="border:0;padding:0;margin:0">
+    <legend class="sr-only">6-digit code</legend>
+    <% for (let i = 0; i < 6; i++) { %>
+      <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Digit <%= i + 1 %>" <%- i === 0 ? 'autocomplete="one-time-code" autofocus' : 'autocomplete="off"' %>>
+    <% } %>
+  </fieldset>
+  <% if (error) { %><div class="alert alert-error" role="alert"><%- icon('alert', 16) %><%= error %></div><% } %>
+  <button class="btn btn-primary btn-block" type="submit" id="verify-btn" disabled>Verify</button>
+</form>
+<form method="post" action="/verify/resend" class="resend">
+  <%- icon('clock', 15) %>
+  <span id="resend-wait" data-seconds="<%= resendIn %>" <%= resendIn > 0 ? '' : 'hidden' %>>Resend code in <span id="resend-timer">0:<%= String(resendIn).padStart(2, '0') %></span></span>
+  <span id="resend-ready" <%= resendIn > 0 ? 'hidden' : '' %>>Didn’t get it? <button class="linklike" type="submit">Resend code</button></span>
+</form>
+<%- include('partials/auth-end', { scripts: ['verify'] }) %>

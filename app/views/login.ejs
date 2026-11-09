@@ -1,0 +1,26 @@
+<%- include('partials/auth-start', { panel: 'floodlight', quote: '“One ticket per verified ID keeps derby tickets with real fans.”', step: null, loginPage: true }) %>
+<div class="eyebrow">Welcome back</div>
+<h1 class="title">Log in to <em>YallaIn</em></h1>
+<p class="lead">Use the mobile number you signed up with.</p>
+
+<form class="form" method="post" action="/login" novalidate>
+  <% if (error) { %><div class="alert alert-error" role="alert"><%- icon('alert', 16) %><%= error %></div><% } %>
+  <div class="field">
+    <label for="mobile">Mobile number</label>
+    <div class="control">
+      <span class="prefix">+20</span>
+      <input class="mono" id="mobile" name="mobile" type="tel" inputmode="numeric" autocomplete="username" placeholder="10 1234 5678" maxlength="14" value="<%= values.mobile || '' %>" required autofocus>
+    </div>
+  </div>
+  <div class="field">
+    <label for="password">Password</label>
+    <div class="control">
+      <%- icon('lock', 18) %>
+      <input id="password" name="password" type="password" autocomplete="current-password" maxlength="72" required>
+      <button class="reveal" type="button" data-reveal="password" aria-label="Show password"><%- icon('eye', 20) %></button>
+    </div>
+  </div>
+  <button class="btn btn-primary btn-block" type="submit">Log in</button>
+</form>
+<p class="footnote">No account yet? <a class="link-lime" href="/signup" style="font-family:var(--font-body)">Create one</a></p>
+<%- include('partials/auth-end', { scripts: ['reveal'] }) %>

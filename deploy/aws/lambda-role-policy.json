@@ -1,0 +1,18 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadIdPhotos",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": "arn:aws:s3:::yallain-ids-yourteam",
+      "Condition": { "StringLike": { "s3:prefix": ["ids/*"] } }
+    },
+    {
+      "Sid": "HeadIdPhotos",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": "arn:aws:s3:::yallain-ids-yourteam/ids/*"
+    }
+  ]
+}

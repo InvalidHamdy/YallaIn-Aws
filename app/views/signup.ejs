@@ -1,0 +1,48 @@
+<%- include('partials/auth-start', { panel: 'floodlight', quote: '“One ticket per verified ID keeps derby tickets with real fans.”' }) %>
+<div class="eyebrow">Step 1 of 6</div>
+<h1 class="title">Create your <em>account</em></h1>
+<p class="lead">We’ll text you a code to confirm your number.</p>
+
+<form class="form" method="post" action="/signup" novalidate id="signup-form">
+  <div class="field">
+    <label for="mobile">Mobile number</label>
+    <div class="control <%= errors.mobile ? 'invalid' : '' %>">
+      <span class="prefix">+20</span>
+      <input class="mono" id="mobile" name="mobile" type="tel" inputmode="numeric" autocomplete="tel-national"
+             placeholder="10 1234 5678" maxlength="14" required value="<%= values.mobile || '' %>"
+             aria-invalid="<%= !!errors.mobile %>" <%= errors.mobile ? '' : 'autofocus' %>>
+    </div>
+    <% if (errors.mobile) { %><div class="err"><%= errors.mobile %><% if (errors.mobileLogin) { %> <a href="/login">Log in instead</a><% } %></div><% } %>
+  </div>
+
+  <div class="field">
+    <label for="password">Password</label>
+    <div class="control <%= errors.password ? 'invalid' : '' %>">
+      <%- icon('lock', 18) %>
+      <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="72" required
+             aria-describedby="pw-rules" aria-invalid="<%= !!errors.password %>">
+      <button class="reveal" type="button" data-reveal="password" aria-label="Show password"><%- icon('eye', 20) %></button>
+    </div>
+    <div class="meter" data-score="0" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="meter-label" data-score="0" aria-live="polite"></div>
+    <ul class="rules" id="pw-rules">
+      <li data-rule="length"><span class="tick"><%- icon('check', 12) %></span>At least 8 characters</li>
+      <li data-rule="number"><span class="tick"><%- icon('check', 12) %></span>Includes a number</li>
+      <li data-rule="symbol"><span class="tick"><%- icon('check', 12) %></span>Includes a symbol <span class="sr-only">(optional)</span></li>
+    </ul>
+    <% if (errors.password) { %><div class="err"><%= errors.password %></div><% } %>
+  </div>
+
+  <div class="field">
+    <label class="check">
+      <input type="checkbox" name="terms" value="1" required>
+      <span class="box"><%- icon('check', 14) %></span>
+      <span>I agree to the Terms, Privacy Policy and the one-ticket-per-ID rule</span>
+    </label>
+    <% if (errors.terms) { %><div class="err"><%= errors.terms %></div><% } %>
+  </div>
+
+  <button class="btn btn-primary btn-block" type="submit">Continue</button>
+</form>
+<p class="footnote">Your data is encrypted · Law 151/2020</p>
+<%- include('partials/auth-end', { scripts: ['signup'] }) %>

@@ -1,0 +1,25 @@
+<%- include('partials/auth-start', { panel: 'floodlight', quote: '“One ticket per verified ID keeps derby tickets with real fans.”' }) %>
+<div class="eyebrow">Step 3 of 6 · Optional</div>
+<h1 class="title">Add your <em>email</em></h1>
+<p class="lead">Get receipts in your inbox and a backup way to log in.</p>
+
+<form class="form" method="post" action="/email" novalidate>
+  <div class="field">
+    <label for="email">Email address</label>
+    <div class="control <%= error ? 'invalid' : '' %>">
+      <%- icon('mail', 18) %>
+      <input id="email" name="email" type="email" autocomplete="email" maxlength="120" placeholder="you@example.com" value="<%= values.email || '' %>" autofocus>
+    </div>
+    <% if (error) { %><div class="err"><%= error %></div><% } %>
+  </div>
+  <div class="benefits">
+    <div class="benefit"><%- icon('mail', 18) %>Receipts and tickets in your inbox</div>
+    <div class="benefit"><%- icon('lock', 18) %>Backup login if you change your number</div>
+    <div class="benefit"><%- icon('ticket', 18) %>Sale alerts for your favorite teams</div>
+  </div>
+  <div class="row-2">
+    <button class="btn btn-primary" type="submit">Save email</button>
+    <button class="btn btn-dark" type="submit" name="skip" value="1" formnovalidate style="order:-1">Skip for now</button>
+  </div>
+</form>
+<%- include('partials/auth-end') %>

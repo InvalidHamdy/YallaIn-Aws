@@ -1,0 +1,77 @@
+<%
+  const st = user.verification_status;
+  const badge = {
+    verified: ['verified', 'shield', 'ID verified'],
+    pending: ['pending', 'clock', 'Verification pending'],
+    rejected: ['rejected', 'alert', 'Not verified'],
+    none: ['none', 'info', 'Not submitted'],
+  }[st];
+  const since = new Date(user.created_at).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+%>
+<%- include('partials/head') %>
+<header class="app-head">
+  <%- include('partials/brand') %>
+  <nav>
+    <span class="who" style="font-family:var(--font-mono)"><%= maskedMobile %></span>
+    <%- include('partials/lang') %>
+    <form method="post" action="/logout"><button class="btn btn-ghost btn-sm" type="submit"><%- icon('logout', 16) %>Log out</button></form>
+  </nav>
+</header>
+
+<main class="home">
+  <% if (flash) { %><div class="alert alert-<%= flash.type === 'ok' ? 'ok' : 'error' %>" role="status" style="margin-bottom:24px"><%- icon('check', 16) %><%= flash.text %></div><% } %>
+
+  <div class="home-hero">
+    <div>
+      <div class="eyebrow" style="margin-bottom:14px">Your account</div>
+      <h1 class="title">Welcome, <em><%= firstName %>.</em></h1>
+    </div>
+    <span class="vbadge <%= badge[0] %>" id="home-badge"><%- icon(badge[1], 16) %><%= badge[2] %></span>
+  </div>
+
+  <div class="grid">
+    <section class="idcard" aria-label="Fan ID">
+      <div class="row">
+        <div class="eyebrow" style="color:var(--lime)">YallaIn fan ID</div>
+        <img src="/static/img/logo.svg" alt="" width="34" height="29">
+      </div>
+      <div class="name"><%= user.full_name || 'Name not set' %></div>
+      <span class="vbadge <%= badge[0] %>" style="padding:5px 10px;font-size:12px"><%- icon(badge[1], 14) %><%= badge[2] %></span>
+      <dl class="kv">
+        <div><dt>National ID</dt><dd><%= user.national_id_last4 ? '•••• •••• ' + user.national_id_last4 : '—' %></dd></div>
+        <div><dt>Mobile</dt><dd><%= maskedMobile %></dd></div>
+        <div><dt>Member since</dt><dd><%= since %></dd></div>
+      </dl>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>Your tickets</h2></div>
+      <div class="tickets-empty">
+        <%- icon('ticket', 28) %>
+        <p style="margin:0">No tickets yet. Booking opens soon — we’ll alert you when your clubs’ matches go on sale.</p>
+        <% if (st !== 'verified') { %><a class="link-lime" href="/id-status">Check ID status</a><% } %>
+      </div>
+    </section>
+
+    <section class="card span-2">
+      <div class="card-head">
+        <h2>Following</h2>
+        <a class="link-lime" href="/favorites"><%- icon('pencil', 14) %> Edit</a>
+      </div>
+      <% if (!clubs.length && !artists.length) { %>
+        <p class="empty" style="margin:0">You’re not following anyone yet. <a class="link-lime" href="/favorites">Pick your clubs and artists</a></p>
+      <% } else { %>
+      <div class="fav-row">
+        <% clubs.forEach(function (c) { %>
+          <div class="pick"><span class="disc"><%= c.code %></span><small><%= c.name %></small></div>
+        <% }) %>
+        <% artists.forEach(function (a) { %>
+          <div class="pick"><span class="disc" style="<%= a.photo_key ? 'background-image:url(' + asset(a.photo_key) + ')' : '' %>"></span><small><%= a.name %></small></div>
+        <% }) %>
+      </div>
+      <% } %>
+    </section>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<%
+  const st = user.verification_status;
+  const fmt = (d) => d ? new Date(d).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Cairo' }) : '';
+  const headline = { verified: 'ID verified', pending: 'Checking your ID', rejected: 'We couldn’t verify', none: 'Checking your ID' }[st];
+  const sub = {
+    verified: 'You can now book tickets — one per match.',
+    pending: 'This usually takes a few seconds. You can continue; your tickets activate once verified.',
+    rejected: 'The photos didn’t pass our checks. Contact support to try again.',
+    none: 'This usually takes a few seconds.',
+  }[st];
+%>
+<%- include('partials/auth-start', { panel: 'fans', quote: st === 'verified' ? '“You’re verified. Your tickets are now yours alone.”' : '“One ticket per verified ID keeps derby tickets with real fans.”' }) %>
+<div id="status-root" data-status="<%= st %>">
+  <div class="status-badge <%= st === 'verified' ? '' : st === 'rejected' ? 'rejected' : 'pending' %>" id="status-badge">
+    <span><%- st === 'verified' ? icon('check', 30) : st === 'rejected' ? icon('alert', 30) : icon('clock', 30) %></span>
+  </div>
+  <h1 class="title" id="status-title"><%= headline %></h1>
+  <p class="lead" id="status-sub"><%= sub %></p>
+
+  <ol class="timeline" aria-label="Verification progress">
+    <li class="ok"><span class="tdot"><%- icon('check', 12) %></span><div><b>Submitted</b><small><%= fmt(submittedAt) %></small></div></li>
+    <li class="<%= st === 'verified' || st === 'rejected' ? 'ok' : 'wait' %>" id="tl-check"><span class="tdot"><%- st === 'verified' || st === 'rejected' ? icon('check', 12) : '' %></span><div><b>Checked by verification service</b><small id="tl-check-time"><%= st === 'verified' || st === 'rejected' ? fmt(user.verified_at) || 'Done' : 'In progress…' %></small></div></li>
+    <li class="<%= st === 'verified' ? 'ok' : '' %>" id="tl-done"><span class="tdot"><%- st === 'verified' ? icon('check', 12) : '' %></span><div><b><%= st === 'rejected' ? 'Not verified' : 'Verified' %></b><small id="tl-done-text"><%= st === 'verified' ? 'Ticket purchases unlocked' : st === 'rejected' ? 'Purchases locked' : 'Waiting' %></small></div></li>
+  </ol>
+
+  <div class="alert alert-warn" id="pending-note" style="margin-top:16px" <%= st === 'pending' || st === 'none' ? '' : 'hidden' %>>
+    <%- icon('clock', 16) %><div><b>Pending</b>Registry is slow. You can still continue; your ticket activates once verified.</div>
+  </div>
+
+  <% if (user.registration_step === STEPS.ID_STATUS) { %>
+  <form method="post" action="/id-status" style="margin-top:28px">
+    <button class="btn btn-primary btn-block" type="submit">Continue</button>
+  </form>
+  <% } else { %>
+  <a class="btn btn-primary btn-block" href="/home" style="margin-top:28px">Back to home</a>
+  <% } %>
+</div>
+<%- include('partials/auth-end', { scripts: ['id-status'] }) %>

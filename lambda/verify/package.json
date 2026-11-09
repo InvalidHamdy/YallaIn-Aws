@@ -1,0 +1,14 @@
+{
+  "name": "yallain-verify-id",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "S3-triggered Lambda that marks a user's ID verified in RDS",
+  "main": "index.mjs",
+  "scripts": {
+    "package": "npm ci --omit=dev && zip -qr ../verify.zip index.mjs package.json node_modules && echo 'Created lambda/verify.zip'"
+  },
+  "dependencies": {
+    "mysql2": "^3.11.5"
+  }
+}

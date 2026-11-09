@@ -1,0 +1,27 @@
+<%- include('partials/auth-start', { panel: 'stadium', quote: '“One ticket per verified ID keeps derby tickets with real fans.”' }) %>
+<div class="eyebrow">Step 5 of 6</div>
+<h1 class="title">Upload your <em>ID photos</em></h1>
+<p class="lead">Front and back. JPG or PNG, up to 10 MB.</p>
+
+<% if (error) { %><div class="alert alert-error" role="alert" style="margin-bottom:18px"><%- icon('alert', 16) %><%= error %></div><% } %>
+
+<form class="form" method="post" action="/id-photo" id="photo-form">
+  <div class="drops">
+    <% ['front', 'back'].forEach(function (side) { const done = uploaded[side]; %>
+    <label class="drop <%= done ? 'done' : '' %>" data-side="<%= side %>">
+      <input type="file" accept="image/jpeg,image/png" aria-label="<%= side === 'front' ? 'Front' : 'Back' %> of ID">
+      <span class="drop-ic"><%- icon(done ? 'check' : 'idcard', 20) %></span>
+      <b><%= side === 'front' ? 'Front of ID' : 'Back of ID' %></b>
+      <small class="state" aria-live="polite"><%- done ? icon('check', 14) + (side === 'front' ? 'Front' : 'Back') + ' · uploaded' : 'Drag & drop or browse' %></small>
+    </label>
+    <% }) %>
+  </div>
+  <div class="chips">
+    <span class="chip"><%- icon('sun', 14) %>Good light</span>
+    <span class="chip"><%- icon('info', 14) %>No glare</span>
+    <span class="chip"><%- icon('corners', 14) %>All corners visible</span>
+  </div>
+  <div class="note"><%- icon('lock', 16) %><span>Photos go straight from your browser to a private, encrypted bucket<%= storageMode === 'local' ? ' (local mode: saved on this server)' : '' %>. Only the verification service can read them.</span></div>
+  <button class="btn btn-primary btn-block" type="submit" id="photo-continue" <%= uploaded.front && uploaded.back ? '' : 'disabled' %>>Continue</button>
+</form>
+<%- include('partials/auth-end', { scripts: ['id-photo'] }) %>

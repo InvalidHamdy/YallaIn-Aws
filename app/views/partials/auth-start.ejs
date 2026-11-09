@@ -1,0 +1,32 @@
+<%- include('head') %>
+<div class="split">
+  <aside class="panel" style="background-image:url('<%= asset('panels/' + panel + '.jpg') %>')">
+    <%- include('brand') %>
+    <div class="tracker-wrap">
+      <% if (typeof step !== 'undefined' && step) { %>
+      <div class="eyebrow">Sign up</div>
+      <ol class="tracker">
+        <% TRACKER.forEach(function (t) { const s = t.n < step ? 'done' : (t.n === step ? 'current' : ''); %>
+        <li class="<%= s %>" <%- s === 'current' ? 'aria-current="step"' : '' %>>
+          <span class="dot"><%- s === 'done' ? icon('check', 16) : t.n %></span><%= t.label %>
+        </li>
+        <% }) %>
+      </ol>
+      <% } %>
+    </div>
+    <p class="quote"><%= quote %></p>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <%- include('brand', { cls: 'mobile-brand' }) %>
+      <%- include('lang') %>
+      <% if (user) { %>
+        <form method="post" action="/logout"><button class="linklike link-lime" type="submit">Log out</button></form>
+      <% } else if (typeof loginPage !== 'undefined' && loginPage) { %>
+        <span class="have">New to YallaIn?</span> <a class="link-lime" href="/signup">Create account</a>
+      <% } else { %>
+        <span class="have">Have an account?</span> <a class="link-lime" href="/login">Log in</a>
+      <% } %>
+    </div>
+    <section class="content">
+      <% if (flash) { %><div class="alert alert-<%= flash.type === 'ok' ? 'ok' : 'error' %>" role="status" style="margin-bottom:20px"><%- icon(flash.type === 'ok' ? 'check' : 'alert', 16) %><%= flash.text %></div><% } %>

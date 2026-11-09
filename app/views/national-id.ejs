@@ -1,0 +1,27 @@
+<%- include('partials/auth-start', { panel: 'stadium', quote: '“Every ticket is tied to one verified fan. That’s how we stop scalpers.”' }) %>
+<div class="eyebrow">Step 4 of 6</div>
+<h1 class="title">Verify your <em>national ID</em></h1>
+<div class="callout" style="margin:24px 0 28px"><%- icon('shield', 18) %><div><b>Why we ask</b>One ticket per ID per match stops scalpers and bots.</div></div>
+
+<form class="form" method="post" action="/national-id" novalidate id="nid-form">
+  <div class="field">
+    <label for="nationalId">National ID number (14 digits)</label>
+    <div class="control <%= errors.nationalId ? 'invalid' : '' %>" id="nid-control">
+      <%- icon('idcard', 18) %>
+      <input class="mono" id="nationalId" name="nationalId" inputmode="numeric" autocomplete="off" maxlength="18"
+             placeholder="2 990315 01 2345 6" value="<%= values.nationalId || '' %>" required autofocus>
+    </div>
+    <div class="hint ok" id="nid-ok" hidden><%- icon('check', 14) %>Format valid · 14 digits</div>
+    <% if (errors.nationalId) { %><div class="err"><%= errors.nationalId %></div><% } %>
+  </div>
+  <div class="field">
+    <label for="fullName">Full name (as on ID)</label>
+    <div class="control <%= errors.fullName ? 'invalid' : '' %>">
+      <input id="fullName" name="fullName" autocomplete="name" maxlength="120" value="<%= values.fullName || '' %>" required>
+    </div>
+    <% if (errors.fullName) { %><div class="err"><%= errors.fullName %></div><% } %>
+  </div>
+  <div class="note"><%- icon('lock', 16) %>Encrypted per Egypt’s Data Protection Law (151/2020). Never shared with organizers. We keep only a one-way hash and the last 4 digits.</div>
+  <button class="btn btn-primary btn-block" type="submit">Continue</button>
+</form>
+<%- include('partials/auth-end', { scripts: ['national-id'] }) %>

@@ -1,0 +1,42 @@
+<%- include('partials/auth-start', { panel: 'concert', quote: '“Follow your club — we’ll tell you the second tickets drop.”' }) %>
+<form method="post" action="/favorites" id="fav-form">
+  <div class="fav-head">
+    <div>
+      <div class="eyebrow"><%= editing ? 'Your favorites' : 'Last step' %></div>
+      <h1 class="title" style="margin-top:14px">Who do you <em>support?</em></h1>
+    </div>
+    <% if (!editing) { %><button class="linklike" type="submit" name="skip" value="1" style="font-size:13px;font-weight:600;color:#c9cbcf;padding-top:4px">Skip</button><% } %>
+  </div>
+
+  <div class="search">
+    <label class="sr-only" for="q">Search clubs and artists</label>
+    <div class="control"><%- icon('search', 18) %><input id="q" type="search" placeholder="Search clubs and artists" value="<%= q %>" autocomplete="off"></div>
+  </div>
+
+  <div class="eyebrow group-label">Clubs</div>
+  <div class="picks" data-group="clubs">
+    <% clubs.forEach(function (c) { %>
+    <label class="pick" data-id="<%= c.id %>">
+      <input type="checkbox" name="clubs" value="<%= c.id %>" <%= picked.has('club:' + c.id) ? 'checked' : '' %>>
+      <span class="disc"><%= c.code %><span class="badge"><%- icon('check', 12) %></span></span>
+      <small><%= c.name %></small>
+    </label>
+    <% }) %>
+  </div>
+  <p class="empty" data-empty="clubs" <%= clubs.length ? 'hidden' : '' %>>No clubs match your search.</p>
+
+  <div class="eyebrow group-label">Artists</div>
+  <div class="picks" data-group="artists">
+    <% artists.forEach(function (a) { %>
+    <label class="pick" data-id="<%= a.id %>">
+      <input type="checkbox" name="artists" value="<%= a.id %>" <%= picked.has('artist:' + a.id) ? 'checked' : '' %>>
+      <span class="disc" style="<%= a.photo_key ? 'background-image:url(' + asset(a.photo_key) + ')' : '' %>"><span class="badge"><%- icon('check', 12) %></span></span>
+      <small><%= a.name %></small>
+    </label>
+    <% }) %>
+  </div>
+  <p class="empty" data-empty="artists" <%= artists.length ? 'hidden' : '' %>>No artists match your search.</p>
+
+  <button class="btn btn-primary btn-block" type="submit" id="fav-submit"><%= editing ? 'Save favorites' : 'Finish' %><span id="fav-count"></span></button>
+</form>
+<%- include('partials/auth-end', { scripts: ['favorites'] }) %>
