@@ -6,7 +6,11 @@ const mysql = require('mysql2/promise');
 const config = require('../src/config');
 
 (async () => {
-  const conn = await mysql.createConnection({ ...config.db, multipleStatements: true });
+  // Connect without a database first so a fresh local MySQL works too (RDS already has it).
+  const { database, ...server } = config.db;
+  const conn = await mysql.createConnection({ ...server, multipleStatements: true });
+  await conn.query(`CREATE DATABASE IF NOT EXISTS \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);
+  await conn.query(`USE \`${database}\``);
   for (const file of ['schema.sql', 'seed.sql']) {
     const sql = fs.readFileSync(path.join(__dirname, '..', '..', 'db', file), 'utf8');
     await conn.query(sql);

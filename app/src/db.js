@@ -11,6 +11,10 @@ const pool = mysql.createPool({
   dateStrings: false,
 });
 
+// Every connection works in UTC, so CURRENT_TIMESTAMP and UTC_TIMESTAMP() always agree
+// (RDS defaults to UTC; a local MySQL on a Cairo PC would otherwise use local time).
+pool.pool.on('connection', (conn) => conn.query("SET time_zone = '+00:00'"));
+
 async function query(sql, params = []) {
   const [rows] = await pool.execute(sql, params);
   return rows;

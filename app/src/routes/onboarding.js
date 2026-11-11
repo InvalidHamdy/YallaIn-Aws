@@ -163,7 +163,7 @@ router.post('/favorites', requireStep(STEPS.FAVORITES, [STEPS.DONE]), async (req
     await conn.execute('UPDATE users SET registration_step = ? WHERE id = ?', [STEPS.DONE, req.user.id]);
     await conn.commit();
     req.session.flash = { type: 'ok', text: req.body.skip ? 'You can pick favorites any time.' : 'Favorites saved.' };
-    res.redirect('/home');
+    req.session.save(() => res.redirect('/home')); // save first, so the message is there when /home loads
   } catch (err) {
     await conn.rollback();
     next(err);

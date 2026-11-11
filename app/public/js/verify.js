@@ -18,11 +18,13 @@
   };
 
   boxes.forEach((box, i) => {
-    box.addEventListener('input', () => {
-      const digits = box.value.replace(/\D/g, '');
+    // Accepts one digit typed, or a whole code inserted at once (SMS autofill, paste, password managers).
+    box.addEventListener('input', (e) => {
+      let digits = box.value.replace(/\D/g, '').slice(0, 6);
       box.value = '';
-      if (digits) fill(i, digits);
-      else sync();
+      if (!digits) { sync(); return; }
+      if (digits.length === 2 && e.inputType === 'insertText') digits = digits.slice(-1); // typed over a filled box
+      fill(i, digits);
     });
     box.addEventListener('keydown', (e) => {
       if (e.key === 'Backspace' && !box.value && i > 0) { boxes[i - 1].value = ''; boxes[i - 1].focus(); sync(); e.preventDefault(); }

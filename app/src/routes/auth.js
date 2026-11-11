@@ -112,7 +112,7 @@ router.post('/verify/resend', authLimiter, requireStep(STEPS.VERIFY), async (req
     }
     req.session.demoCode = await otp.issue(req.user);
     req.session.flash = { type: 'ok', text: 'A new code is on its way.' };
-    res.redirect('/verify');
+    req.session.save(() => res.redirect('/verify'));
   } catch (err) {
     next(err);
   }
